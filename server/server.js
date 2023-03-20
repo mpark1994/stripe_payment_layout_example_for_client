@@ -2,7 +2,9 @@ import express from 'express'
 import dotenv from 'dotenv'
 import stripe from 'stripe'
 import cors from 'cors'
+import mongoose from 'mongoose'
 
+import { register } from './controllers/auth'
 
 dotenv.config()
 const app = express()
@@ -19,6 +21,10 @@ const storeItems = new Map([
     [2, { priceInCents: 200000, name: "Piano Lesson [Yearly Subscription]"}]
 ])
 
+// Sample register
+app.post("/auth/register", register)
+
+// Checkout
 app.post('/create-checkout-session', async (req, res) => {
     try {
         const session = await stripe_access.checkout.sessions.create({
@@ -48,4 +54,15 @@ app.post('/create-checkout-session', async (req, res) => {
     }
 })
 
-app.listen(3000)
+// MongoDB Database
+const PORT = process.env.PORT || 6001
+mongoose.set('strictQuery', false)
+const db = mongoose
+    .connect(process.env.MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    })
+    .then(() => {
+        console.log(`Server Port: ${PORT}`)
+        app.listen(PORT)
+    }).catch((e) => console.log(e.error))
