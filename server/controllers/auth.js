@@ -10,6 +10,7 @@ export async function register(req, res) {
             lastName,
             email,
             password,
+            subscribed,
         } = req.body
 
         // Encryption
@@ -21,6 +22,7 @@ export async function register(req, res) {
             lastName,
             email,
             password: passwordHash,
+            subscribed: false,
         })
         const savedUser = await newUser.save()
         res.status(201).json(savedUser)

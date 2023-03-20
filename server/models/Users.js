@@ -28,6 +28,10 @@ const UserSchema = new Schema({
         required: true,
         min: 5,
     },
+    subscribed: {
+        type: Boolean,
+        required: true,
+    },
 }, {timestamps: true})
 
 const User = mongoose.model("User", UserSchema)
